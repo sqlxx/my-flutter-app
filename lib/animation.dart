@@ -30,13 +30,20 @@ class _LogoAppState extends State<LogoAnimation> with SingleTickerProviderStateM
         setState(() {
 
         });
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
       });
     controller.forward();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(animation.value);
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
