@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:my_app/shopping.dart';
+import 'cartapp.dart';
 import 'layout.dart';
 import 'animation.dart';
+import 'screens/cart.dart';
+import 'screens/catalog.dart';
 import 'shopping.dart';
 import 'appbar.dart';
 
@@ -17,8 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Welcome to Flutter',
       theme: new ThemeData(primaryColor: Colors.blue),
-      home: SwitchPanel() 
-
+      home: SwitchPanel(),
     );
   }
 }
@@ -47,6 +49,9 @@ class SwitchPanel extends StatelessWidget {
             },),
             RaisedButton(child: Text('Animation'), onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (conext) => LogoApp()));
+            },),
+            RaisedButton(child: Text('Catalog'), onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (conext) => CartApp()));
             },),
           ],
         ))
