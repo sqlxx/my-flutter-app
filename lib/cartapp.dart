@@ -10,26 +10,19 @@ class CartApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider(create: (context) => CatalogModel()),
-        ChangeNotifierProxyProvider<CatalogModel, CartModel>(
-          create: (context) => CartModel(),
-          update: (context, catalog, cart) {
-            cart.catalog = catalog;
-            return cart;
-          }
-        )
-      ],
-      child:  MaterialApp(
-        title: 'Welcome to Flutter',
-        theme: new ThemeData(primaryColor: Colors.blue),
-        initialRoute: '/catalog',
-        routes: {
-          "/cart": (context) => MyCart(),
-          "/catalog": (context) => MyCatalog()
-        }
-      )
-
-    );
+        providers: [
+          Provider(create: (context) => CatalogModel()),
+          ChangeNotifierProxyProvider<CatalogModel, CartModel>(
+              create: (context) => CartModel(),
+              update: (context, catalog, cart) {
+                cart!.catalog = catalog;
+                return cart;
+              })
+        ],
+        child: MaterialApp(
+            title: 'Welcome to Flutter',
+            theme: new ThemeData(primaryColor: Colors.blue),
+            initialRoute: '/catalog',
+            routes: {"/cart": (context) => MyCart(), "/catalog": (context) => MyCatalog()}));
   }
 }

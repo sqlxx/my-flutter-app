@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
-
 class LogoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Animation')),
-      body: LogoAnimation()
-    );
+    return Scaffold(appBar: AppBar(title: Text('Animation')), body: LogoAnimation());
   }
 }
 
@@ -17,8 +13,8 @@ class LogoAnimation extends StatefulWidget {
 }
 
 class _LogoAppState extends State<LogoAnimation> with SingleTickerProviderStateMixin {
-  Animation<double> animation;
-  AnimationController controller;
+  late Animation<double> animation;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -27,14 +23,11 @@ class _LogoAppState extends State<LogoAnimation> with SingleTickerProviderStateM
     controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
       ..addListener(() {
-        setState(() {
-
-        });
+        setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
-
         } else if (status == AnimationStatus.dismissed) {
           controller.forward();
         }
@@ -45,13 +38,12 @@ class _LogoAppState extends State<LogoAnimation> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        height: animation.value,
-        width: animation.value,
-        child: FlutterLogo(),
-      )
-    );
+        child: Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      height: animation.value,
+      width: animation.value,
+      child: FlutterLogo(),
+    ));
   }
 
   @override

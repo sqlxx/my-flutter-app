@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:my_app/navigator2/my_router_delegate.dart';
 import 'package:my_app/screens/login.dart';
 import 'package:my_app/shopping.dart';
 import 'bloc/bloc.dart';
 import 'cartapp.dart';
 import 'layout.dart';
 import 'animation.dart';
+import 'navigator2/appstate.dart';
+import 'navigator2/my_route_information_parser.dart';
 import 'screens/bloc_counter.dart';
 import 'screens/cart.dart';
 import 'screens/catalog.dart';
@@ -19,20 +22,29 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final appState = MyAppState();
+
+    final authenticationBloc = AuthenticationBloc();
+    authenticationBloc.state.listen((event) {
+      appState.isLogin = event.isAuthenticated;
+    });
     return BlocProvider(
-        blocBuilder: () => AuthenticationBloc(),
-        child: MaterialApp(
-          title: 'Welcome to Flutter',
-          theme: new ThemeData(primaryColor: Colors.blue),
-          home: DecisionPage(),
-        ));
+      blocBuilder: () => authenticationBloc,
+      child: MaterialApp.router(
+        title: 'Welcome to Flutter',
+        theme: new ThemeData(primaryColor: Colors.blue),
+        // home: DecisionPage(),
+        routeInformationParser: MyRouteInformationParser(),
+        routerDelegate: MyRouterDelegate(appState),
+      ),
+    );
   }
 }
 
 class SwitchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
+    final authenticationBloc = BlocProvider.of<AuthenticationBloc>(context)!;
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

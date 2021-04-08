@@ -11,28 +11,26 @@ abstract class BlocBase {
 
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
   BlocProvider({
-    Key key,
-    @required this.child,
-    @required this.blocBuilder,
+    required this.child,
+    required this.blocBuilder,
     this.blocDispose,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final BlocBuilder<T> blocBuilder;
-  final BlocDisposer<T> blocDispose;
+  final BlocDisposer<T>? blocDispose;
 
   @override
   State<StatefulWidget> createState() => BlocProviderState<T>();
 
-  static T of<T extends BlocBase>(BuildContext context) {
-    final _BlocProviderInherited<T> provider =
-        context.getElementForInheritedWidgetOfExactType<_BlocProviderInherited<T>>()?.widget;
+  static T? of<T extends BlocBase>(BuildContext context) {
+    final _BlocProviderInherited<T>? provider = context.dependOnInheritedWidgetOfExactType<_BlocProviderInherited<T>>();
     return provider?.bloc;
   }
 }
 
 class BlocProviderState<T extends BlocBase> extends State<BlocProvider<T>> {
-  T bloc;
+  late T bloc;
 
   @override
   void initState() {
@@ -43,9 +41,9 @@ class BlocProviderState<T extends BlocBase> extends State<BlocProvider<T>> {
   @override
   void dispose() {
     if (widget.blocDispose != null) {
-      widget.blocDispose(bloc);
+      widget.blocDispose!(bloc);
     } else {
-      bloc?.dispose();
+      bloc.dispose();
     }
     super.dispose();
   }
@@ -59,14 +57,13 @@ class BlocProviderState<T extends BlocBase> extends State<BlocProvider<T>> {
   }
 }
 
-class _BlocProviderInherited<T> extends InheritedWidget {
+class _BlocProviderInherited<T extends BlocBase> extends InheritedWidget {
   _BlocProviderInherited({
-    Key key,
-    @required Widget child,
-    @required this.bloc,
-  }) : super(key: key, child: child);
+    required Widget child,
+    required this.bloc,
+  }) : super(child: child);
 
-  final BlocBase bloc;
+  final T bloc;
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
@@ -77,21 +74,19 @@ abstract class BlocEvent {}
 abstract class BlocState {}
 
 abstract class BlocEventStateBase<BlocEvent, BlocState> implements BlocBase {
-  StreamController<BlocEvent> _eventController = StreamController<BlocEvent>();
-  StreamController<BlocState> _stateController = StreamController<BlocState>();
-  Stream<BlocState> _stateStream;
+  StreamController<BlocEvent> _eventController = StreamController<BlocEvent>.broadcast();
+  StreamController<BlocState> _stateController = StreamController<BlocState>.broadcast();
 
   Function(BlocEvent) get emitEvent => _eventController.sink.add;
 
-  Stream<BlocState> get state => _stateStream;
+  Stream<BlocState> get state => _stateController.stream;
 
   Stream<BlocState> eventHandler(BlocEvent event, BlocState currentState);
 
   final BlocState initialState;
-  BlocState _currentState;
+  BlocState? _currentState;
 
-  BlocEventStateBase({@required this.initialState}) {
-    _stateStream = _stateController.stream.asBroadcastStream();
+  BlocEventStateBase({required this.initialState}) {
     _eventController.stream.listen((event) {
       BlocState currentState = _currentState ?? initialState;
       eventHandler(event, currentState).forEach((BlocState newState) {
@@ -112,12 +107,9 @@ typedef Widget AsyncBlocEventStateBuilder<BlocState>(BuildContext context, BlocS
 
 class BlocEventStateBuilder<BlocEvent, BlocState> extends StatelessWidget {
   const BlocEventStateBuilder({
-    Key key,
-    @required this.builder,
-    @required this.bloc,
-  })  : assert(builder != null),
-        assert(bloc != null),
-        super(key: key);
+    required this.builder,
+    required this.bloc,
+  });
 
   final AsyncBlocEventStateBuilder<BlocState> builder;
   final BlocEventStateBase<BlocEvent, BlocState> bloc;
@@ -128,7 +120,7 @@ class BlocEventStateBuilder<BlocEvent, BlocState> extends StatelessWidget {
       stream: bloc.state,
       initialData: bloc.initialState,
       builder: (BuildContext context, AsyncSnapshot<BlocState> snapshot) {
-        return builder(context, snapshot.data);
+        return builder(context, snapshot.data!);
       },
     );
   }

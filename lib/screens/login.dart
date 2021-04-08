@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_app/bloc/bloc.dart';
 import 'package:my_app/screens/initializing_page.dart';
 
-import '../main.dart';
-
 abstract class AuthenticationEvent extends BlocEvent {
   final String name;
   AuthenticationEvent({
@@ -13,7 +11,7 @@ abstract class AuthenticationEvent extends BlocEvent {
 
 class AuthenticationEventLogin extends AuthenticationEvent {
   AuthenticationEventLogin({
-    String name,
+    required String name,
   }) : super(name: name);
 }
 
@@ -27,7 +25,7 @@ class AuthenticationState extends BlocState {
   final String name;
 
   AuthenticationState({
-    @required this.isAuthenticated,
+    required this.isAuthenticated,
     this.isAuthenticating: false,
     this.hasFailed: false,
     this.name: '',
@@ -78,10 +76,10 @@ class DecisionPage extends StatefulWidget {
 }
 
 class _DecisionPageState extends State<DecisionPage> {
-  AuthenticationState _oldState;
+  AuthenticationState? _oldState;
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<AuthenticationBloc>(context);
+    final AuthenticationBloc bloc = BlocProvider.of<AuthenticationBloc>(context)!;
     return BlocEventStateBuilder<AuthenticationEvent, AuthenticationState>(
         bloc: bloc,
         builder: (context, state) {
@@ -101,8 +99,8 @@ class _DecisionPageState extends State<DecisionPage> {
   }
 
   _redirectToPage(BuildContext context, Widget widget) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
     });
   }
 }
@@ -110,7 +108,7 @@ class _DecisionPageState extends State<DecisionPage> {
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<AuthenticationBloc>(context);
+    final bloc = BlocProvider.of<AuthenticationBloc>(context)!;
     return WillPopScope(
       onWillPop: () async => false,
       child: SafeArea(

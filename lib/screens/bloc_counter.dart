@@ -39,7 +39,7 @@ class BlocCounterScreen extends StatelessWidget {
 class CounterDisplayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final counterBlocStream = BlocProvider.of<CounterBloc>(context).countStream;
+    final counterBlocStream = BlocProvider.of<CounterBloc>(context)!.countStream;
     debugPrint("stream is $counterBlocStream");
     return StreamBuilder<int>(
         stream: counterBlocStream,

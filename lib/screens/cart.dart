@@ -6,23 +6,24 @@ class MyCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cart', style: Theme.of(context).textTheme.display4), backgroundColor: Colors.white),
-      body: Container(
-        color: Colors.yellow,
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: _CartList(),
-              ),
-            ),
-            Divider(height: 4, color: Colors.black,),
-            _CartTotal()
-          ],
-        )  
-      )
-    );
+        appBar: AppBar(title: Text('Cart', style: Theme.of(context).textTheme.display4), backgroundColor: Colors.white),
+        body: Container(
+            color: Colors.yellow,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: _CartList(),
+                  ),
+                ),
+                Divider(
+                  height: 4,
+                  color: Colors.black,
+                ),
+                _CartTotal()
+              ],
+            )));
   }
 }
 
@@ -35,12 +36,11 @@ class _CartList extends StatelessWidget {
     return ListView.builder(
       itemCount: cart.items.length,
       itemBuilder: (context, index) => ListTile(
-        leading: Icon(Icons.done),
-        title: Text(
-          cart.items[index].name,
-          style: itemNameStyle,
-        )
-      ),
+          leading: Icon(Icons.done),
+          title: Text(
+            cart.items[index].name,
+            style: itemNameStyle,
+          )),
     );
   }
 }
@@ -48,12 +48,12 @@ class _CartList extends StatelessWidget {
 class _CartTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var hugeStyle = Theme.of(context).textTheme.display4.copyWith(fontSize: 48);
-    var cart = Provider.of<CartModel>(context); 
+    var hugeStyle = Theme.of(context).textTheme.display4!.copyWith(fontSize: 48);
+    var cart = Provider.of<CartModel>(context);
     return SizedBox(
-      height: 200,
-      child: Center(
-        child: Row(
+        height: 200,
+        child: Center(
+            child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Consumer<CartModel>(
@@ -62,15 +62,12 @@ class _CartTotal extends StatelessWidget {
             Text('\$${cart.totalPrice}', style: hugeStyle),
             SizedBox(width: 24),
             FlatButton(
-              onPressed: () {
-                Scaffold.of(context).showSnackBar(SnackBar(content: Text('Buying not supported yet.')));
-              }, 
-              child: Text('BUY'),
-              color: Colors.white
-            )
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Buying not supported yet.')));
+                },
+                child: Text('BUY'),
+                color: Colors.white)
           ],
-        )
-      )
-    );
+        )));
   }
 }

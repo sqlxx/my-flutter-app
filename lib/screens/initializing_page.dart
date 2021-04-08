@@ -5,7 +5,7 @@ import 'package:my_app/main.dart';
 class ApplicationInitializeEvent implements BlocEvent {
   final ApplicationInitializeEventType type;
 
-  ApplicationInitializeEvent({this.type: ApplicationInitializeEventType.start}) : assert(type != null);
+  ApplicationInitializeEvent({this.type: ApplicationInitializeEventType.start});
 }
 
 enum ApplicationInitializeEventType { start, stop }
@@ -15,7 +15,7 @@ class ApplicationInitializeState implements BlocState {
   final bool isInitialing;
   final int progress;
 
-  ApplicationInitializeState({@required this.isInitialized, this.isInitialing: false, this.progress: 0});
+  ApplicationInitializeState({required this.isInitialized, this.isInitialing: false, this.progress: 0});
 
   factory ApplicationInitializeState.notInitialized() {
     return ApplicationInitializeState(isInitialized: false);
@@ -84,9 +84,9 @@ class _InitializingPageState extends State<InitializingPage> {
           }
 
           if (data.isInitialized) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushAndRemoveUntil(
-                  context, MaterialPageRoute(builder: (_) => SwitchPanel()), ModalRoute.withName("/"));
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              // Navigator.pushAndRemoveUntil(
+              //     context, MaterialPageRoute(builder: (_) => SwitchPanel()), ModalRoute.withName("/"));
             });
             widget = Text('初始化完成');
           }
