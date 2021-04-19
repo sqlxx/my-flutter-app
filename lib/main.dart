@@ -3,11 +3,12 @@ import 'package:english_words/english_words.dart';
 import 'package:my_app/navigator2/my_router_delegate.dart';
 import 'package:my_app/screens/login.dart';
 import 'package:my_app/shopping.dart';
+import 'package:provider/provider.dart';
 import 'bloc/bloc.dart';
 import 'cartapp.dart';
 import 'layout.dart';
 import 'animation.dart';
-import 'navigator2/appstate.dart';
+import 'navigator2/route_state.dart';
 import 'navigator2/my_route_information_parser.dart';
 import 'screens/bloc_counter.dart';
 import 'screens/cart.dart';
@@ -22,29 +23,32 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appState = MyAppState();
+    final appState = RouteState();
 
     final authenticationBloc = AuthenticationBloc();
     authenticationBloc.state.listen((event) {
       appState.isLogin = event.isAuthenticated;
     });
-    return BlocProvider(
-      blocBuilder: () => authenticationBloc,
-      child: MaterialApp.router(
-        title: 'Welcome to Flutter',
-        theme: new ThemeData(primaryColor: Colors.blue),
-        // home: DecisionPage(),
-        routeInformationParser: MyRouteInformationParser(),
-        routerDelegate: MyRouterDelegate(appState),
-      ),
-    );
+    return ChangeNotifierProvider<RouteState>(
+        create: (_) => appState,
+        child: BlocProvider(
+          blocBuilder: () => authenticationBloc,
+          child: MaterialApp.router(
+            title: 'Welcome to Flutter',
+            theme: new ThemeData(primaryColor: Colors.blue),
+            // home: DecisionPage(),
+            routeInformationParser: MyRouteInformationParser(),
+            routerDelegate: MyRouterDelegate(appState),
+          ),
+        ));
   }
 }
 
 class SwitchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authenticationBloc = BlocProvider.of<AuthenticationBloc>(context)!;
+    final AuthenticationBloc authenticationBloc = BlocProvider.of<AuthenticationBloc>(context)!;
+    final RouteState appState = Provider.of<RouteState>(context, listen: false);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -55,49 +59,34 @@ class SwitchPanel extends StatelessWidget {
               ElevatedButton(
                 child: Text('Layout'),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LayoutApp()));
+                  appState.push(RouteState.PATH_LAYOUT);
                 },
               ),
               ElevatedButton(
                 child: Text('Shopping'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ShoppingApp()));
-                },
+                onPressed: () => appState.push(RouteState.PATH_SHOPPING),
               ),
               ElevatedButton(
                 child: Text('RandomWords'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => RandomWords()));
-                },
+                onPressed: () => appState.push(RouteState.PATH_RANDOM_WORDS),
               ),
               ElevatedButton(
                 child: Text('MyAppBar'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TutorialHome()));
-                },
+                onPressed: () => appState.push(RouteState.PATH_MY_APP_BAR),
               ),
               ElevatedButton(
                 child: Text('Animation'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogoApp()));
-                },
+                onPressed: () => appState.push(RouteState.PATH_ANIMATION),
               ),
               ElevatedButton(
                 child: Text('Catalog'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CartApp()));
-                },
+                onPressed: () => appState.push(RouteState.PATH_CATALOG),
               ),
-              ElevatedButton(
-                child: Text('SnackBar'),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SnakeBarDemo()));
-                },
-              ),
+              ElevatedButton(child: Text('SnackBar'), onPressed: () => appState.push(RouteState.PATH_SNACK_BAR)),
               ElevatedButton(
                 child: Text('Bloc Counter'),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => BlocCounterScreen()));
+                  appState.push(RouteState.PATH_BLOC_COUNTER);
                 },
               ),
               ElevatedButton(

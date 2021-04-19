@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
 
-import 'appstate.dart';
+import 'route_state.dart';
 
-class MyRouteInformationParser extends RouteInformationParser<MyAppState> {
+class MyRouteInformationParser extends RouteInformationParser<RouteState> {
   @override
-  Future<MyAppState> parseRouteInformation(RouteInformation routeInformation) async {
+  Future<RouteState> parseRouteInformation(RouteInformation routeInformation) async {
     // TODO: implement parseRouteInformation
     debugPrint('${routeInformation.location}');
-    return MyAppState();
+    return RouteState();
   }
 
   @override
-  RouteInformation? restoreRouteInformation(MyAppState configuration) {
+  RouteInformation? restoreRouteInformation(RouteState configuration) {
     // TODO: implement restoreRouteInformation
     return super.restoreRouteInformation(configuration);
   }

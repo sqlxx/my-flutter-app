@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:my_app/navigator2/appstate.dart';
+import 'package:my_app/navigator2/route_state.dart';
 import 'package:my_app/screens/initializing_page.dart';
 
-class MyRouterDelegate extends RouterDelegate<MyAppState>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<MyAppState> {
+class MyRouterDelegate extends RouterDelegate<RouteState>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteState> {
   final GlobalKey<NavigatorState> navigatorKey;
-  final MyAppState appState;
+  final RouteState appState;
 
   MyRouterDelegate(this.appState) : navigatorKey = GlobalKey<NavigatorState>() {
     this.appState.addListener(() {
@@ -31,13 +31,13 @@ class MyRouterDelegate extends RouterDelegate<MyAppState>
     //TODO: If in the home page, return to the desktop
     // If logged in and in the stack, return to the previous stack
     // If not logged in, or not initialized, has no effect.
+    debugPrint("In _onPopPage2");
 
-    notifyListeners();
-    return true;
+    return appState.pop();
   }
 
   @override
-  Future<void> setNewRoutePath(MyAppState configuration) async {
+  Future<void> setNewRoutePath(RouteState configuration) async {
     debugPrint("In setNewRoutePath");
     notifyListeners();
     return;

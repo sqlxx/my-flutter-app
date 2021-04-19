@@ -11,7 +11,7 @@ import 'package:my_app/screens/login.dart';
 import 'package:my_app/shopping.dart';
 import 'package:my_app/snakebar.dart';
 
-class MyAppState extends ChangeNotifier {
+class RouteState extends ChangeNotifier {
   static const String PATH_HOME = '/';
   static const String PATH_LAYOUT = '/layout';
   static const String PATH_SHOPPING = '/shopping';
@@ -34,10 +34,12 @@ class MyAppState extends ChangeNotifier {
     NavItem(path: PATH_BLOC_COUNTER, page: BlocCounterScreen()),
   };
 
-  MyAppState()
+  RouteState()
       : navMap = {for (var item in navPaths) item.path: item},
         _isLogin = false,
-        isLoading = false;
+        isLoading = false {
+    this.navStack.add(NavItem.homePage());
+  }
 
   final Map<String, NavItem> navMap;
   bool _isLogin;
@@ -54,14 +56,21 @@ class MyAppState extends ChangeNotifier {
 
   bool get isLogin => this._isLogin;
 
-  void pop() {
-    if (navStack.length > 0) {
+  bool pop() {
+    if (navStack.length > 1) {
       navStack.removeLast();
+      notifyListeners();
+      return true;
+    } else {
+      return false;
     }
   }
 
   void push(String path) {
-    navStack.add(navMap[path]!);
+    if (navStack.last.path != path) {
+      navStack.add(navMap[path]!);
+      notifyListeners();
+    }
   }
 }
 
@@ -73,5 +82,5 @@ class NavItem {
 
   factory NavItem.loginPage() => NavItem(path: '/login', page: LoginPage());
   factory NavItem.loadingPage() => NavItem(path: '/loading', page: InitializingPage());
-  factory NavItem.homePage() => NavItem(path: MyAppState.PATH_HOME, page: SwitchPanel());
+  factory NavItem.homePage() => NavItem(path: RouteState.PATH_HOME, page: SwitchPanel());
 }

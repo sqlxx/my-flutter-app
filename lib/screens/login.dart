@@ -117,7 +117,7 @@ class LoginPage extends StatelessWidget {
               bloc: bloc,
               builder: (context, state) {
                 if (state.isAuthenticating || state.isAuthenticated) {
-                  return Text('Logging');
+                  return Center(child: CircularProgressIndicator());
                 }
 
                 List<Widget> children = <Widget>[];
